@@ -1,1 +1,43 @@
-
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argo-ubuntu-pod
+  namespace: cnx
+  labels:
+    app: argo-ubuntu-pod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: argo-ubuntu-pod
+  template:
+    metadata:
+      labels:
+        app: argo-ubuntu-pod
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: ubuntu
+        image: ubuntu
+        imagePullPolicy: IfNotPresent
+        command: ["sleep", "604800"]
+        volumeMounts:
+        - mountPath: /data
+          name: test-vol
+        - mountPath: /cte-scripts
+          name: cte-scripts
+      - name: nginx-sidecar
+        image: nginx:latest
+        volumeMounts:
+        - mountPath: /data
+          name: test-vol
+        - mountPath: /cte-scripts
+          name: cte-scripts
+      volumes:
+      - name: test-vol
+        persistentVolumeClaim:
+          claimName: cte-claim
+      - name: cte-scripts
+        configMap:
+          name: cte-liveness-config
+          defaultMode: 0755
