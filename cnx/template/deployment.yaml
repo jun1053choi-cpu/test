@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "argo-ubuntu-pod.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ include "argo-ubuntu-pod.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "argo-ubuntu-pod.fullname" . }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+    rollingUpdate:
+      maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "argo-ubuntu-pod.fullname" . }}
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: ubuntu
+        image: "{{ .Values.images.ubuntu.repository }}:{{ .Values.images.ubuntu.tag }}"
+        imagePullPolicy: {{ .Values.images.ubuntu.pullPolicy }}
+        command: ["sleep", "604800"]
+        volumeMounts:
+        - mountPath: /data
+          name: test-vol
+        - mountPath: /cte-scripts
+          name: cte-scripts
+      - name: nginx-sidecar
+        image: "{{ .Values.images.nginx.repository }}:{{ .Values.images.nginx.tag }}"
+        imagePullPolicy: {{ .Values.images.nginx.pullPolicy }}
+        volumeMounts:
+        - mountPath: /data
+          name: test-vol
+        - mountPath: /cte-scripts
+          name: cte-scripts
+      volumes:
+      - name: test-vol
+        persistentVolumeClaim:
+          claimName: {{ .Values.volumes.pvc.claimName }}
+      - name: cte-scripts
+        configMap:
+          name: {{ .Values.volumes.configMap.name }}
+          defaultMode: {{ .Values.volumes.configMap.defaultMode }}
+```
+
+### templates/_helpers.tpl
+```
+{{- define "argo-ubuntu-pod.fullname" -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- end }}
