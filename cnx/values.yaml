@@ -5,7 +5,7 @@ namespace: cnx
 images:
   ubuntu:
     repository: ubuntu
-    tag: "latest"
+    tag: "22.04"
     pullPolicy: IfNotPresent
   nginx:
     repository: nginx
