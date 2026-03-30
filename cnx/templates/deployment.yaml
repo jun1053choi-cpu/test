@@ -47,10 +47,7 @@ spec:
         configMap:
           name: {{ .Values.volumes.configMap.name }}
           defaultMode: {{ .Values.volumes.configMap.defaultMode }}
-```
 
-### templates/_helpers.tpl
-```
 {{- define "argo-ubuntu-pod.fullname" -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
