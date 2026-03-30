@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "argo-ubuntu-pod.fullname" . }}
+  name: {{ include "argo.fullname" . }}
   namespace: {{ .Values.namespace }}
   labels:
-    app: {{ include "argo-ubuntu-pod.fullname" . }}
+    app: {{ include "argo.fullname" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "argo-ubuntu-pod.fullname" . }}
+      app: {{ include "argo.fullname" . }}
   strategy:
     type: {{ .Values.strategy.type }}
     rollingUpdate:
@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ include "argo-ubuntu-pod.fullname" . }}
+        app: {{ include "argo.fullname" . }}
     spec:
       terminationGracePeriodSeconds: 0
       containers:
