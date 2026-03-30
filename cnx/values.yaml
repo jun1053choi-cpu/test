@@ -6,11 +6,11 @@ images:
   ubuntu:
     repository: ubuntu
     tag: "22.04"
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   nginx:
     repository: nginx
     tag: "latest"
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
 
 strategy:
   type: RollingUpdate
