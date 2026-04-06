@@ -12,11 +12,9 @@ spec:
       app: {{ include "argo-beta.fullname" . }}
   strategy:
     type: {{ .Values.strategy.type }}
-    {{- if eq .Values.strategy.type "RollingUpdate" }}
     rollingUpdate:
       maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge }}
       maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable }}
-    {{- end }}
   template:
     metadata:
       labels:
@@ -31,14 +29,12 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: test-vol
-
       - name: nginx-sidecar
         image: "{{ .Values.images.nginx.repository }}:{{ .Values.images.nginx.tag }}"
         imagePullPolicy: {{ .Values.images.nginx.pullPolicy }}
         volumeMounts:
         - mountPath: /data
           name: test-vol
-
       volumes:
       - name: test-vol
         persistentVolumeClaim:
