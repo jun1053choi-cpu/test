@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 3
 namespace: cnx
 
 # 이미지 설정 - 여기만 바꾸면 롤링 업데이트 트리거!
