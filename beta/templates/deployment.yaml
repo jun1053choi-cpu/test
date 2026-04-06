@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ include "argo-beta.fullname" . }}
   namespace: {{ .Values.namespace }}
   labels:
-    app: {{ .Release.Name }}
+    app: {{ include "argo-beta.fullname" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ include "argo-beta.fullname" . }}
   strategy:
     type: {{ .Values.strategy.type }}
     rollingUpdate:
@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ include "argo-beta.fullname" . }}
     spec:
       terminationGracePeriodSeconds: 0
       containers:
@@ -29,13 +29,22 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: test-vol
+        - mountPath: /cte-scripts
+          name: cte-scripts
       - name: nginx-sidecar
         image: "{{ .Values.images.nginx.repository }}:{{ .Values.images.nginx.tag }}"
         imagePullPolicy: {{ .Values.images.nginx.pullPolicy }}
         volumeMounts:
         - mountPath: /data
           name: test-vol
+        - mountPath: /cte-scripts
+          name: cte-scripts
       volumes:
       - name: test-vol
         persistentVolumeClaim:
           claimName: {{ .Values.volumes.pvc.claimName }}
+      - name: cte-scripts
+        configMap:
+          name: {{ .Values.volumes.configMap.name }}
+          defaultMode: {{ .Values.volumes.configMap.defaultMode }}
+
