@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "argo.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ include "argo.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "argo.fullname" . }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+    rollingUpdate:
+      maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "argo.fullname" . }}
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: ubuntu
+        image: "{{ .Values.images.ubuntu.repository }}:{{ .Values.images.ubuntu.tag }}"
+        imagePullPolicy: {{ .Values.images.ubuntu.pullPolicy }}
+        command: ["sleep", "604800"]
+        volumeMounts:
+        - mountPath: /data
+          name: test-vol
+
+      - name: nginx-sidecar
+        image: "{{ .Values.images.nginx.repository }}:{{ .Values.images.nginx.tag }}"
+        imagePullPolicy: {{ .Values.images.nginx.pullPolicy }}
+        volumeMounts:
+        - mountPath: /data
+          name: test-vol
+
+      volumes:
+      - name: test-vol
+        persistentVolumeClaim:
+          claimName: {{ .Values.volumes.pvc.claimName }}
+
+
