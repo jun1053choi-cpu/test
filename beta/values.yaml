@@ -17,10 +17,6 @@ strategy:
   rollingUpdate:
     maxSurge: 1
     maxUnavailable: 0
-
 volumes:
   pvc:
     claimName: cte-beta-claim
-  configMap:
-    name: cte-liveness-config
-    defaultMode: 0755

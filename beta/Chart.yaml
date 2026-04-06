@@ -1,5 +1,5 @@
 apiVersion: v2
-name: argo
+name: argo-beta
 description: Argo Ubuntu Pod with Nginx Sidecar
 type: application
 version: 0.1.0
