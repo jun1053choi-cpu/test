@@ -1,0 +1,20 @@
+replicaCount 2
+namespace cnx
+
+# 이미지 설정 - 여기만 바꾸면 롤링 업데이트 트리거!
+images
+  ubuntu
+    repository ubuntu
+    tag 22.04     ##22.04, latest
+    pullPolicy Always
+  nginx
+    repository nginx
+    tag latest
+    pullPolicy Always
+
+strategy
+  type RollingUpdate
+  rollingUpdate
+    maxSurge 1
+    maxUnavailable 0
+
