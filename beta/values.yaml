@@ -20,7 +20,7 @@ strategy:
 
 volumes:
   pvc:
-    claimName: cte-claim
+    claimName: cte-beta-claim
   configMap:
     name: cte-liveness-config
     defaultMode: 0755

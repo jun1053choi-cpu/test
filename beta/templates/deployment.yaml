@@ -29,22 +29,17 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: test-vol
-        - mountPath: /cte-scripts
-          name: cte-scripts
+    
       - name: nginx-sidecar
         image: "{{ .Values.images.nginx.repository }}:{{ .Values.images.nginx.tag }}"
         imagePullPolicy: {{ .Values.images.nginx.pullPolicy }}
         volumeMounts:
         - mountPath: /data
           name: test-vol
-        - mountPath: /cte-scripts
-          name: cte-scripts
+   
       volumes:
       - name: test-vol
         persistentVolumeClaim:
           claimName: {{ .Values.volumes.pvc.claimName }}
-      - name: cte-scripts
-        configMap:
-          name: {{ .Values.volumes.configMap.name }}
-          defaultMode: {{ .Values.volumes.configMap.defaultMode }}
+
 
