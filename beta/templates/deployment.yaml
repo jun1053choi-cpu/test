@@ -1,24 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "argo.fullname" . }}
+  name: {{ include "argo-beta.fullname" . }}
   namespace: {{ .Values.namespace }}
   labels:
-    app: {{ include "argo.fullname" . }}
+    {{- include "argo-beta.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "argo.fullname" . }}
+      app: {{ include "argo-beta.fullname" . }}
   strategy:
     type: {{ .Values.strategy.type }}
+    {{- if eq .Values.strategy.type "RollingUpdate" }}
     rollingUpdate:
       maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge }}
       maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable }}
+    {{- end }}
   template:
     metadata:
       labels:
-        app: {{ include "argo.fullname" . }}
+        app: {{ include "argo-beta.fullname" . }}
     spec:
       terminationGracePeriodSeconds: 0
       containers:
@@ -41,5 +43,3 @@ spec:
       - name: test-vol
         persistentVolumeClaim:
           claimName: {{ .Values.volumes.pvc.claimName }}
-
-
