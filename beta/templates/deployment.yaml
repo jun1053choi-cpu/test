@@ -4,7 +4,7 @@ metadata:
   name: {{ include "argo-beta.fullname" . }}
   namespace: {{ .Values.namespace }}
   labels:
-    {{- include "argo-beta.labels" . | nindent 4 }}
+    app: {{ include "argo-beta.fullname" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
