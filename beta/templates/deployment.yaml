@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "argo-beta.fullname" . }}
+  name: {{ .Release.Name }}
   namespace: {{ .Values.namespace }}
   labels:
-    app: {{ include "argo-beta.fullname" . }}
+    app: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "argo-beta.fullname" . }}
+      app: {{ .Release.Name }}
   strategy:
     type: {{ .Values.strategy.type }}
     rollingUpdate:
@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ include "argo-beta.fullname" . }}
+        app: {{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 0
       containers:
