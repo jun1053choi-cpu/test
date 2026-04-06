@@ -20,7 +20,7 @@ spec:
       labels:
         app: {{ include "argo-beta.fullname" . }}
     spec:
-      terminationGracePeriodSeconds: 0
+      terminationGracePeriodSeconds: 30
       containers:
       - name: ubuntu
         image: "{{ .Values.images.ubuntu.repository }}:{{ .Values.images.ubuntu.tag }}"
@@ -29,17 +29,13 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: test-vol
-    
       - name: nginx-sidecar
         image: "{{ .Values.images.nginx.repository }}:{{ .Values.images.nginx.tag }}"
         imagePullPolicy: {{ .Values.images.nginx.pullPolicy }}
         volumeMounts:
         - mountPath: /data
           name: test-vol
-   
       volumes:
       - name: test-vol
         persistentVolumeClaim:
           claimName: {{ .Values.volumes.pvc.claimName }}
-
-

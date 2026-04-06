@@ -20,7 +20,7 @@ spec:
       labels:
         app: {{ include "argo.fullname" . }}
     spec:
-      terminationGracePeriodSeconds: 0
+      terminationGracePeriodSeconds: 30
       containers:
       - name: ubuntu
         image: "{{ .Values.images.ubuntu.repository }}:{{ .Values.images.ubuntu.tag }}"
